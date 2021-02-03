@@ -1,13 +1,18 @@
+import java.security.InvalidParameterException
+
 class Matrix(private val matrix: ArrayList<ArrayList<ComplexNumber>>) {
+    init {
+        if(matrix.size == 0 || matrix[0].size == 0)
+            throw InvalidParameterException()
+        val size = matrix[0].size
+        for (row in matrix){
+            if(row.size != size){
+                throw InvalidParameterException()
+            }
+        }
+    }
+
     private fun checkSizeForMultiply(secondMatrix: Matrix){
-        if (secondMatrix.matrix.size == 0 && matrix.size == 0)
-        {
-            return
-        }
-        if (secondMatrix.matrix.size == 0 || matrix.size == 0)
-        {
-            throw Exception("Bad dimensions")
-        }
         if (matrix[0].size != secondMatrix.matrix.size)
         {
             throw Exception("Bad dimensions")
@@ -23,6 +28,18 @@ class Matrix(private val matrix: ArrayList<ArrayList<ComplexNumber>>) {
         {
             throw Exception("Bad dimensions")
         }
+    }
+
+    fun transpose(): Matrix{
+        val newMatrix: ArrayList<ArrayList<ComplexNumber>> = arrayListOf()
+        for(col in matrix[0].indices) {
+            val newRow: ArrayList<ComplexNumber> = arrayListOf()
+            for (row in matrix.indices) {
+                newRow.add(matrix[row][col])
+            }
+            newMatrix.add(newRow)
+        }
+        return Matrix(newMatrix)
     }
 
     operator fun plus(secondMatrix: Matrix): Matrix{
